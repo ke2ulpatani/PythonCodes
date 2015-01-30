@@ -7,7 +7,7 @@ def properFormat(syn):
     syn = syn.strip()
     syn = syn[2:]
     syn = syn.split('.',1)
-    syn = list(str)[0]
+    syn = list(syn)[0]
     syn = syn.replace(' ','')
     syn = syn.replace(';',',')
     syn = syn.split(',')
@@ -27,33 +27,19 @@ def getDefinition(page,keyword):
     sourcedata = soup.findAll('div',{'class':'source-data'})[:1]
     soup = bs(str(sourcedata))
     sections = soup.findAll('section',{'class':'def-pbk'})[:3]
-#######################################################################
-    #Synonym snippet
-    
+
+    antbox = soup.findAll('div',{'class':re.compile('tail-type-antonyms')})
     synbox = soup.findAll('div',{'class':re.compile('tail-type-synonyms')})
+
     soup = bs(str(synbox))
     synonyms = soup.find('div',{'class':re.compile('js-toggle-tail-blobs')})
-    print 'here'
-    k = properFormat(str(synonyms.text.strip()))
-    print k
-    #dictionary[keyword]['synonyms']=[]
-    #print 'here'
-    #dictionary[keyword]['synonyms']=properFormat(str(synonyms.text))
+    dictionary[keyword]['synonyms']=properFormat(str(synonyms.text).strip())
 
-    #print len(s
-    #print len(synonyms)
-    #synsoup = bs(str(synonyms))
-    #s = synsoup.findAll('span')
+    soup = bs(str(antbox))
+    antonyms = soup.find('div',{'class':re.compile('js-toggle-tail-blobs')})
+    dictionary[keyword]['antonyms']=properFormat(str(antonyms.text).strip())
+
     
-    #for k in synonyms:
-        #print k['class']
-    #synonymsstr = str(synsoup.text)#.replace(' ','')  
-    #print synonymsstr
-    #synonym snippet end
-    #dictionary[keyword]['synonym']=[]
-    #dictionary[keyword]['synonym'].append(str(synonyms.text).strip())
-########################################################################
-
     for section in sections:
        soup = bs(str(section))
        wordtype = soup.find('span',{'class':'dbox-pg'})
