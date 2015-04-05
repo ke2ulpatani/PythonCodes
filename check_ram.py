@@ -9,7 +9,7 @@ def find_between_r( s, first, last ):
         return ""
 
 if __name__ == "__main__":
-    s = psutil.virtual_memory()
+    s = psutil.phymem_usage()
     s = str(s)
     s = find_between_r(s,"percent=","used").strip().replace(",","")
     s = float(s)
