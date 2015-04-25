@@ -1,6 +1,8 @@
 import urllib2 as ul
 import urllib
 import os
+from bs4 import BeautifulSoup as bs
+from urllib2 import URLError, HTTPError
 
 def find_between_r( s, first, last ):
     try:
@@ -24,36 +26,46 @@ def checkEnd(sourceCode):
     else:
         return 0
 
-def getAllImage(source):
+def getAllImage(source,celeb):
     soup = bs(source)
+
     images = soup.findAll('img')
+
     for image in images:
         link = str(image['src'])[2:]
-        fileName = find_between_r(link,"/",".jpg")+".jpg"
-        urllib.urlretrieve(link,fileName)
+        fileName = find_between_r(link,"/",".jpg")
+        link = "http://" + link.replace(fileName,fileName[:-1])
+        fileName = fileName + ".jpg"
+        print link
+        urllib.urlretrieve(link,"./"+celeb+"/"+fileName)
 
 
 def makeDir(celeb):
     directory = "./"+celeb
     if not os.path.exists(directory):
         os.makedirs(directory)
-    #make a folder with celeb name
+        print 'dir made'
+
 
 if __name__ == "__main__":
     celeb = raw_input('Enter the name of the celebrity:\t')
+
     celeb = celeb.replace(" ","")
     count = 1
     url = 'http://imgur.com/r/'+celeb+'/new/page/'+str(count)+'/hit?scrolled'
+    print url
     makeDir(celeb)
     while 1:
-        if checkEnd(str(getSourceCode(url))):
+        source = str(getSourceCode(url))
+        if checkEnd(str(source)):
             print "No image"
             break
         else:
             try:
-                getAllImage(url)
+                getAllImage(str(source),celeb)
                 print "Image No. "+str(count)+" Done"
-                count = count + 1
+                count += 1
             except:
-                count = count + 1
+                count += 1
+                print 'Error'
                 continue
