@@ -1,3 +1,4 @@
+from threading import Thread as T
 import urllib2 as ul
 import urllib
 import os
@@ -20,7 +21,7 @@ def getSourceCode(url):
 
 
 def checkEnd(sourceCode):
-    endPage = '<div class="posts sub-gallery br10">\n                                    <div id="nomore" class="textbox">\n                    <a href=\'/\'>Discover more images.</a>\n                </div>\n            \n        \n        \n    </div>'
+    endPage = '<div class="posts sub-gallery br10">\n<div id="nomore" class="textbox">\n<a href=\'/\'>Discover more images.</a>\n</div>\n\n\n\n</div>'
     if endPage == sourceCode:
         return 1
     else:
@@ -38,7 +39,10 @@ def getAllImage(source,celeb):
         fileName = fileName + ".jpg"
         print link
         urllib.urlretrieve(link,"./"+celeb+"/"+fileName)
-
+    if len(images) >0:
+        return 1
+    else:
+        return 0
 
 def makeDir(celeb):
     directory = "./"+celeb
@@ -62,9 +66,13 @@ if __name__ == "__main__":
             break
         else:
             try:
-                getAllImage(str(source),celeb)
-                print "Image No. "+str(count)+" Done"
-                count += 1
+                if (getAllImage(str(source),celeb)):
+                    print "Page No. "+str(count)+" Done"
+                    count += 1
+                else:
+                    print "Page No. "+str(count)+" Not Done"
+                    break
+                    count +=1
             except:
                 count += 1
                 print 'Error'
