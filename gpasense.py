@@ -17,7 +17,7 @@ receivers = ""
 
 def sendMail(source,gpa):
     
-    sender = 'ke2ul.patani@gmail.com'
+    sender = username
     try:
         msg = MIMEMultipart('alternative')
         msg['Subject'] = "Your GPA is "+str(gpa)
